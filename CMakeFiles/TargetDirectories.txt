@@ -12,15 +12,14 @@
 /home/carry/aruco-3.0.9/src/CMakeFiles/install/strip.dir
 /home/carry/aruco-3.0.9/src/CMakeFiles/install/local.dir
 /home/carry/aruco-3.0.9/src/CMakeFiles/edit_cache.dir
+/home/carry/aruco-3.0.9/utils/CMakeFiles/rebuild_cache.dir
 /home/carry/aruco-3.0.9/utils/CMakeFiles/aruco_simple.dir
 /home/carry/aruco-3.0.9/utils/CMakeFiles/install.dir
 /home/carry/aruco-3.0.9/utils/CMakeFiles/aruco_test.dir
 /home/carry/aruco-3.0.9/utils/CMakeFiles/aruco_print_dictionary.dir
 /home/carry/aruco-3.0.9/utils/CMakeFiles/aruco_tracker.dir
-/home/carry/aruco-3.0.9/utils/CMakeFiles/edit_cache.dir
 /home/carry/aruco-3.0.9/utils/CMakeFiles/aruco_batch_processing.dir
-/home/carry/aruco-3.0.9/utils/CMakeFiles/rebuild_cache.dir
-/home/carry/aruco-3.0.9/utils/CMakeFiles/aruco_test_copy.dir
+/home/carry/aruco-3.0.9/utils/CMakeFiles/edit_cache.dir
 /home/carry/aruco-3.0.9/utils/CMakeFiles/aruco_print_marker.dir
 /home/carry/aruco-3.0.9/utils/CMakeFiles/transform.dir
 /home/carry/aruco-3.0.9/utils/CMakeFiles/list_install_components.dir

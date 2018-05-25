@@ -40,12 +40,6 @@ cv::Mat resize(const cv::Mat& in, int width)
     cv::resize(in, im2, cv::Size(width, static_cast<int>(in.size().height * yf)));
     return im2;
 }
-/************************************
- *
- *
- *
- *
- ************************************/
 void setParamsFromGlobalVariables(aruco::MarkerDetector &md){
 
 
@@ -131,21 +125,27 @@ cv::Mat resizeImage(cv::Mat &in,float resizeFactor){
     cout<<"Imagesize="<<imres.size()<<endl;
     return imres;
 }
-/************************************
- *
- *
- *
- *
- ************************************/
+
+
+int range(MatrixXf a, MatrixXf b)
+{
+    for(int i=0;i<4;i++)
+        for(int j=0;j<4;j++)
+        {
+            if (((a(i,j)-b(i,j))>2)||((b(i,j)-a(i,j))>2))
+                return 0;
+        }
+    return 1;
+}
 int main(int argc, char** argv)
 {
     try
     {
         CmdLineParser cml(argc, argv);
-        if (cml["-h"])
+        if (argc<3 || cml["-h"])
         {
             cerr << "Invalid number of arguments" << endl;
-            cerr << "Usage: (in.avi|live[:camera_index(e.g 0 or 1)]) [-c camera_params.yml] [-s  marker_size_in_meters] [-d "
+            cerr << "Usage: (in1.avi|live[:camera_index(e.g 0 or 1 or 2)]) (in2.avi|live[:camera_index(e.g 0 or 1 or 2)]) [-c camera_params.yml] [-s  marker_size_in_meters] [-d "
                     "dictionary:ALL_DICTS by default] [-h]"
                  << endl;
             cerr << "\tDictionaries: ";
@@ -160,6 +160,7 @@ int main(int argc, char** argv)
 
         int i,j,flag=0;
         MatrixXf Transform(4,4),Transform1(4,4);
+        ofstream myfile ("Transformation.txt");
 
         string TheInputVideo1 = argv[1];
         string TheInputVideo2 = argv[2];
@@ -211,17 +212,17 @@ int main(int argc, char** argv)
             TheVideoCapturer1.open(TheInputVideo1);
             if ( TheVideoCapturer1.get(CV_CAP_PROP_FRAME_COUNT)>=2) isVideo=true;
       
-        // check video is open
-        if (!TheVideoCapturer1.isOpened())
-            throw std::runtime_error("Could not open video 1");
+            // check video is open
+            if (!TheVideoCapturer1.isOpened())
+                throw std::runtime_error("Could not open video 1");
 
-        TheVideoCapturer2.open(TheInputVideo2);
+            TheVideoCapturer2.open(TheInputVideo2);
             if ( TheVideoCapturer2.get(CV_CAP_PROP_FRAME_COUNT)>=2) isVideo=true;
       
-        // check video is open
-        if (!TheVideoCapturer2.isOpened())
-            throw std::runtime_error("Could not open video 2");
-    }
+            // check video is open
+            if (!TheVideoCapturer2.isOpened())
+                throw std::runtime_error("Could not open video 2");
+        }
 
 
         ///// CONFIGURE DATA
@@ -290,8 +291,8 @@ int main(int argc, char** argv)
              TheInputImage2=resizeImage(TheInputImage2,resizeFactor);
               // copy image
             Fps.start();
-            TheMarkers1 = MDetector1.detect(TheInputImage1, TheCameraParameters, 0.09);
-            TheMarkers2 = MDetector2.detect(TheInputImage2, TheCameraParameters, 0.09);
+            TheMarkers1 = MDetector1.detect(TheInputImage1, TheCameraParameters, 0.092);
+            TheMarkers2 = MDetector2.detect(TheInputImage2, TheCameraParameters, 0.092);//THE THIRD PARAMETER IS VERY IMPORTANT, THE MARKER SIZE.
             Fps.stop();
            
             TheInputImage1.copyTo(TheInputImageCopy1);
@@ -365,7 +366,7 @@ int main(int argc, char** argv)
             MatrixXf A(4,4),B1(4,1),B2(4,1),B3(4,1),C1(4,1),C2(4,1),C3(4,1);
             if((TheMarkers2.size()>3)&&(TheMarkers1.size()>3))
             {
-                 int a[4],b[4],counter=0;
+                 int a[4],b[4],counter=0;//a and b for keeping the track that same tag is not counted in again
                 for(i=0;i<4;i++)
                 {
                     a[i]=0;
@@ -374,7 +375,7 @@ int main(int argc, char** argv)
                 for(i=0;(i<TheMarkers1.size())&&(TheMarkers1[i].id!=a[0])&&(TheMarkers1[i].id!=a[1])&&(TheMarkers1[i].id!=a[2])&&(TheMarkers1[i].id!=a[3]);i++)
                 {
                     a[i]=TheMarkers1[i].id;
-                    TheMarkers1[i].OgreGetPoseParameters(positionL[i],orientationL[i]);
+                    TheMarkers1[i].OgreGetPoseParameters(positionL[i],orientationL[i]);// gets the pose of the marker
                     double* ptrL = &positionL[i][0];   //pointer to the first position
                     std::vector<double> v_positionL(ptrL , ptrL + 3);   //double array to vector of doubles
                     double* v_ptrL= &v_positionL[0];
@@ -402,8 +403,76 @@ int main(int argc, char** argv)
                             counter++;
 
 
-                if(counter>3)
+                if(counter>3)// to check if we do have atleast 4 markers from both the tags
                     {
+                        int x=0,y=0,z=0,c=0;
+                        for(i=0;i<4;i++)
+                        {
+                            x=x+A(i,0);
+                        }
+                         for(i=0;i<4;i++)
+                        {
+                            y=y+A(i,1);
+                        }
+                         for(i=0;i<4;i++)
+                        {
+                            z=z+A(i,2);
+                        }
+                        x=x/4;
+                        y=y/4;
+                        z=z/4;
+                        for(i=0;i<4;i++)
+                        {
+                            A(i,0)=A(i,0)-x;
+                        }
+                         for(i=0;i<4;i++)
+                        {
+                            A(i,1)=A(i,1)-y;
+                        }
+                         for(i=0;i<4;i++)
+                        {
+                            A(i,2)=A(i,2)-z;
+                        }
+                        for(i=0;i<4;i++)
+                        {
+                            c=c+C1(i,0);
+                        }
+                        c=c/4;
+                        for(i=0;i<4;i++)
+                        {
+                            C1(i,0)=C1(i,0)-c;
+                        }
+                        c=0;
+                        for(i=0;i<4;i++)
+                        {
+                           c=c+C2(i,0);
+                        }
+                        c=c/4;
+                        for(i=0;i<4;i++)
+                        {
+                            C2(i,0)=C2(i,0)-c;
+                        }
+                        c=0;
+                        for(i=0;i<4;i++)
+                        {
+                           c=c+C3(i,0);
+                        }
+                        c=c/4;
+                        for(i=0;i<4;i++)
+                        {
+                            C3(i,0)=C3(i,0)-c;
+                        }
+                        c=0;
+                        for(i=0;i<4;i++)
+                        {
+                           c=c+C3(i,0);
+                        }
+                        c=c/4;
+                        for(i=0;i<4;i++)
+                        {
+                            C3(i,0)=C3(i,0)-c;
+                        }
+                        c=0;
                         if(A.determinant()!=0)
                         {
                             B1=(A.inverse())*C1;
@@ -434,10 +503,16 @@ int main(int argc, char** argv)
                             }
                             else
                             {
-                                flag++;
-                                Transform=(Transform*(flag-1)+Transform1)/flag;
+                                if(range(Transform,Transform1)==1)
+                                {
+                                    ofstream myfile1 ("Transformation_only_matrix.txt");
+                                    flag++;
+                                    Transform=(Transform*(flag-1)+Transform1)/flag;
+                                    myfile << flag << endl << Transform <<endl;
+                                    myfile1 << Transform <<endl;
+                                    cout << flag << endl << "Transformation Matrix:" << endl << Transform << endl;
+                                }
                             }
-                            cout << "Transformation Matrix:" << endl << Transform << endl;
                         }
                     }
             }   

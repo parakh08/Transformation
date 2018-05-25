@@ -74,7 +74,6 @@ set(CMAKE_DEPEND_INFO_FILES
   "utils/CMakeFiles/aruco_print_dictionary.dir/DependInfo.cmake"
   "utils/CMakeFiles/aruco_tracker.dir/DependInfo.cmake"
   "utils/CMakeFiles/aruco_batch_processing.dir/DependInfo.cmake"
-  "utils/CMakeFiles/aruco_test_copy.dir/DependInfo.cmake"
   "utils/CMakeFiles/aruco_print_marker.dir/DependInfo.cmake"
   "utils/CMakeFiles/transform.dir/DependInfo.cmake"
   "utils_markermap/CMakeFiles/aruco_simple_markermap.dir/DependInfo.cmake"

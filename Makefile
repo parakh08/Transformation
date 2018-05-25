@@ -246,19 +246,6 @@ aruco_batch_processing/fast:
 .PHONY : aruco_batch_processing/fast
 
 #=============================================================================
-# Target rules for targets named aruco_test_copy
-
-# Build rule for target.
-aruco_test_copy: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 aruco_test_copy
-.PHONY : aruco_test_copy
-
-# fast build rule for target.
-aruco_test_copy/fast:
-	$(MAKE) -f utils/CMakeFiles/aruco_test_copy.dir/build.make utils/CMakeFiles/aruco_test_copy.dir/build
-.PHONY : aruco_test_copy/fast
-
-#=============================================================================
 # Target rules for targets named aruco_print_marker
 
 # Build rule for target.
@@ -394,7 +381,6 @@ help:
 	@echo "... aruco_print_dictionary"
 	@echo "... aruco_tracker"
 	@echo "... aruco_batch_processing"
-	@echo "... aruco_test_copy"
 	@echo "... aruco_print_marker"
 	@echo "... transform"
 	@echo "... aruco_simple_markermap"

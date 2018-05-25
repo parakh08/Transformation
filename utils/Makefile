@@ -56,6 +56,17 @@ CMAKE_BINARY_DIR = /home/carry/aruco-3.0.9
 #=============================================================================
 # Targets provided globally by CMake.
 
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	/usr/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
+
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
+
+.PHONY : rebuild_cache/fast
+
 # Special rule for the target install
 install: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
@@ -78,17 +89,6 @@ edit_cache:
 edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
-
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/usr/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
-
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
-
-.PHONY : rebuild_cache/fast
 
 # Special rule for the target list_install_components
 list_install_components:
@@ -228,21 +228,6 @@ aruco_batch_processing: utils/CMakeFiles/aruco_batch_processing.dir/rule
 aruco_batch_processing/fast:
 	cd /home/carry/aruco-3.0.9 && $(MAKE) -f utils/CMakeFiles/aruco_batch_processing.dir/build.make utils/CMakeFiles/aruco_batch_processing.dir/build
 .PHONY : aruco_batch_processing/fast
-
-# Convenience name for target.
-utils/CMakeFiles/aruco_test_copy.dir/rule:
-	cd /home/carry/aruco-3.0.9 && $(MAKE) -f CMakeFiles/Makefile2 utils/CMakeFiles/aruco_test_copy.dir/rule
-.PHONY : utils/CMakeFiles/aruco_test_copy.dir/rule
-
-# Convenience name for target.
-aruco_test_copy: utils/CMakeFiles/aruco_test_copy.dir/rule
-
-.PHONY : aruco_test_copy
-
-# fast build rule for target.
-aruco_test_copy/fast:
-	cd /home/carry/aruco-3.0.9 && $(MAKE) -f utils/CMakeFiles/aruco_test_copy.dir/build.make utils/CMakeFiles/aruco_test_copy.dir/build
-.PHONY : aruco_test_copy/fast
 
 # Convenience name for target.
 utils/CMakeFiles/aruco_print_marker.dir/rule:
@@ -409,33 +394,6 @@ aruco_test.cpp.s:
 	cd /home/carry/aruco-3.0.9 && $(MAKE) -f utils/CMakeFiles/aruco_test.dir/build.make utils/CMakeFiles/aruco_test.dir/aruco_test.cpp.s
 .PHONY : aruco_test.cpp.s
 
-aruco_test_copy.o: aruco_test_copy.cpp.o
-
-.PHONY : aruco_test_copy.o
-
-# target to build an object file
-aruco_test_copy.cpp.o:
-	cd /home/carry/aruco-3.0.9 && $(MAKE) -f utils/CMakeFiles/aruco_test_copy.dir/build.make utils/CMakeFiles/aruco_test_copy.dir/aruco_test_copy.cpp.o
-.PHONY : aruco_test_copy.cpp.o
-
-aruco_test_copy.i: aruco_test_copy.cpp.i
-
-.PHONY : aruco_test_copy.i
-
-# target to preprocess a source file
-aruco_test_copy.cpp.i:
-	cd /home/carry/aruco-3.0.9 && $(MAKE) -f utils/CMakeFiles/aruco_test_copy.dir/build.make utils/CMakeFiles/aruco_test_copy.dir/aruco_test_copy.cpp.i
-.PHONY : aruco_test_copy.cpp.i
-
-aruco_test_copy.s: aruco_test_copy.cpp.s
-
-.PHONY : aruco_test_copy.s
-
-# target to generate assembly for a file
-aruco_test_copy.cpp.s:
-	cd /home/carry/aruco-3.0.9 && $(MAKE) -f utils/CMakeFiles/aruco_test_copy.dir/build.make utils/CMakeFiles/aruco_test_copy.dir/aruco_test_copy.cpp.s
-.PHONY : aruco_test_copy.cpp.s
-
 aruco_tracker.o: aruco_tracker.cpp.o
 
 .PHONY : aruco_tracker.o
@@ -496,15 +454,14 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
+	@echo "... rebuild_cache"
 	@echo "... aruco_simple"
 	@echo "... install"
 	@echo "... aruco_test"
 	@echo "... aruco_print_dictionary"
 	@echo "... aruco_tracker"
-	@echo "... edit_cache"
 	@echo "... aruco_batch_processing"
-	@echo "... rebuild_cache"
-	@echo "... aruco_test_copy"
+	@echo "... edit_cache"
 	@echo "... aruco_print_marker"
 	@echo "... transform"
 	@echo "... list_install_components"
@@ -525,9 +482,6 @@ help:
 	@echo "... aruco_test.o"
 	@echo "... aruco_test.i"
 	@echo "... aruco_test.s"
-	@echo "... aruco_test_copy.o"
-	@echo "... aruco_test_copy.i"
-	@echo "... aruco_test_copy.s"
 	@echo "... aruco_tracker.o"
 	@echo "... aruco_tracker.i"
 	@echo "... aruco_tracker.s"
