@@ -1,3 +1,8 @@
+This code is for you to convert the view of one camera into another by tuning the transformation matrix using the x,y and z pose using aruco tags.
+
+
+
+
 ArUco: One library to rule them all
 -------------------------------------------------------------------
 
